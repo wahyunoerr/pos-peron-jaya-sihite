@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">{{ __('Sortirs') }}</h1>
+                    <h1 class="m-0">{{ __('Sortir Sawit') }}</h1>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -20,7 +20,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h3>Tabel Sortir</h3>
+                                <h3>Tabel Sortir Sawit</h3>
                                 <a href="{{ route('sortirs.create') }}" class="btn bg-maroon">Tambah Data</a>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
                                         <th>Status</th>
                                         <th>Harga</th>
                                         <th>Presentase</th>
-                                        <th>Jongkos</th>
+                                        <th>Jangkos</th>
                                         <th>Timbangan Bersih</th>
                                         <th>Harga Beli</th>
                                         <th>Penjual</th>

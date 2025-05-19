@@ -5,23 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Sortir;
 use App\Models\Transaksi;
 use App\Models\RiwayatSortir;
-use App\Models\DetailTransaksi; // Added import for DetailTransaksi
+use App\Models\DetailTransaksi;
+use App\Models\Supir;
 use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
-    /**
-     * Show the form for creating a new transaction.
-     */
     public function create()
     {
         $sortirs = Sortir::all();
-        return view('transaksi.create', compact('sortirs'));
+        $supirs = Supir::all();
+        return view('transaksi.create', compact('sortirs', 'supirs'));
     }
 
-    /**
-     * Store a newly created transaction in storage.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -30,6 +26,11 @@ class TransaksiController extends Controller
             'jumlah_transaksi' => 'required|integer|min:1',
             'sortir_ids' => 'required|string',
             'harga_jual' => 'required|numeric|min:0',
+            'supir_id' => 'required|exists:supirs,id',
+            'upah_supir' => 'required|numeric',
+            'nama_kerusakan' => 'array',
+            'biaya_kerusakan' => 'array',
+            'nama_pabrik' => 'required|string|max:255',
         ]);
 
         $sortirIds = explode(',', $validatedData['sortir_ids']);
@@ -38,17 +39,36 @@ class TransaksiController extends Controller
             'kode_transaksi' => $validatedData['kode_transaksi'],
             'tanggal_transaksi' => $validatedData['tanggal_transaksi'],
             'jumlah_transaksi' => $validatedData['jumlah_transaksi'],
+            'supir_id' => $validatedData['supir_id'],
         ]);
 
+        $firstDetail = true;
         foreach ($sortirIds as $sortirId) {
             $sortir = Sortir::find($sortirId);
             if ($sortir) {
-                DetailTransaksi::create([
+                $totalHargaJual = $request->input('total_harga_jual');
+                $detail = DetailTransaksi::create([
                     'transaksi_id' => $transaksi->id,
-                    'nama_pabrik' => $sortir->penjual->name,
+                    'nama_pabrik' => $validatedData['nama_pabrik'],
                     'sortir_id' => $sortir->id,
-                    'harga_jual' => $validatedData['harga_jual'],
+                    'harga_jual_per_kg' => $validatedData['harga_jual'],
+                    'total_harga_jual' => $totalHargaJual,
+                    'supir_id' => $validatedData['supir_id'],
+                    'upah_supir' => $validatedData['upah_supir'],
                 ]);
+                if ($firstDetail && $request->has('nama_kerusakan') && $request->has('biaya_kerusakan')) {
+                    $namaKerusakan = $request->input('nama_kerusakan');
+                    $biayaKerusakan = $request->input('biaya_kerusakan');
+                    foreach ($namaKerusakan as $idx => $nama) {
+                        if ($nama && isset($biayaKerusakan[$idx])) {
+                            $detail->detailKerusakans()->create([
+                                'nama_kerusakan' => $nama,
+                                'biaya_kerusakan' => $biayaKerusakan[$idx],
+                            ]);
+                        }
+                    }
+                    $firstDetail = false;
+                }
 
                 RiwayatSortir::create([
                     'sortir_id' => $sortir->id,
@@ -71,27 +91,18 @@ class TransaksiController extends Controller
         return redirect()->route('transaksis.report')->with('success', 'Transaksi berhasil dibuat.');
     }
 
-    /**
-     * Display the details of a specific transaction.
-     */
     public function show($id)
     {
         $transaksi = Transaksi::with(['detailTransaksis.riwayatSortir'])->findOrFail($id);
         return view('transaksi.show', compact('transaksi'));
     }
 
-    /**
-     * Display the invoice for a specific transaction.
-     */
     public function invoice($id)
     {
         $transaksi = Transaksi::findOrFail($id);
         return view('transaksi.invoice', compact('transaksi'));
     }
 
-    /**
-     * Display a listing of the transactions.
-     */
     public function report()
     {
         $transaksis = Transaksi::with('detailTransaksis', 'riwayatSortirs')->get();

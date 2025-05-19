@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">{{ __('Create Sortir') }}</h1>
+                    <h1 class="m-0">{{ __('Create Sortir Sawit') }}</h1>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -57,7 +57,7 @@
                                     <input type="number" name="harga" id="harga" class="form-control" required>
                                 </div>
                                 <div class="form-group" id="jangkos-container" style="display: none;">
-                                    <label for="jangkos">Jongkos</label>
+                                    <label for="jangkos">Jangkos</label>
                                     <input type="text" name="jangkos" id="jangkos" class="form-control">
                                 </div>
 

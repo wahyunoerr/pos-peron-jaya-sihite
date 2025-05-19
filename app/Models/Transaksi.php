@@ -23,11 +23,37 @@ class Transaksi extends Model
 
     public function calculateProfitFromDetails()
     {
-        $totalTimbanganBersih = $this->riwayatSortirs->sum('timbangan_bersih');
-        $hargaJual = $this->riwayatSortirs->first()->harga;
-        $modal = $totalTimbanganBersih * $hargaJual;
-        $keuntungan = $modal - $hargaJual;
+        $totalKeuntungan = 0;
+        $grouped = $this->detailTransaksis->groupBy('transaksi_id');
+        foreach ($grouped as $details) {
+            $totalHargaJual = $details->first()->total_harga_jual ?? 0;
+            $totalModal = 0;
+            $totalUpahSupir = 0;
+            $totalBiayaKerusakan = 0;
+            foreach ($details as $detail) {
+                if ($detail->riwayatSortir) {
+                    $totalModal += $detail->riwayatSortir->harga * ($detail->riwayatSortir->timbangan_bersih ?? 0);
+                }
+                $totalUpahSupir += $detail->upah_supir ?? 0;
+                if ($detail->detailKerusakans) {
+                    $totalBiayaKerusakan += $detail->detailKerusakans->sum('biaya_kerusakan');
+                }
+            }
+            $keuntungan = $totalHargaJual - $totalModal - $totalUpahSupir - $totalBiayaKerusakan;
+            $totalKeuntungan += $keuntungan;
+        }
+        return $totalKeuntungan;
+    }
 
-        return $keuntungan;
+    public function calculateTotalModal()
+    {
+        return $this->detailTransaksis->sum(function ($detail) {
+            return $detail->riwayatSortir->harga * ($detail->riwayatSortir->timbangan_bersih ?? 0);
+        });
+    }
+
+    public function supir()
+    {
+        return $this->belongsTo(Supir::class);
     }
 }

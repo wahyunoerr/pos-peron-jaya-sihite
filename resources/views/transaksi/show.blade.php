@@ -29,22 +29,68 @@
                 <thead>
                     <tr>
                         <th>Nama Pemilik Sawit</th>
+                        <th>Harga Beli</th>
                         <th>Timbangan Bersih</th>
+                        <th>Modal</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($transaksi->detailTransaksis as $detail)
                         <tr>
                             <td>{{ $detail->riwayatSortir->penjual->name }}</td>
+                            <td>Rp. {{ number_format($detail->riwayatSortir->harga, 0, ',', '.') }}</td>
                             <td>{{ $detail->riwayatSortir->timbangan_bersih ?? '-' }} kg</td>
+                            <td>Rp.
+                                {{ number_format($detail->riwayatSortir->harga * $detail->riwayatSortir->timbangan_bersih, 0, ',', '.') }}
+                            </td>
                         </tr>
                     @endforeach
+                    <tr>
+                        <td colspan="4">
+                            @if ($transaksi->detailTransaksis->flatMap->detailKerusakans->count())
+                                <div class="mt-4 p-3">
+                                    <strong>Daftar Kerusakan:</strong>
+                                    <ul style="margin-bottom:0">
+                                        @foreach ($transaksi->detailTransaksis->flatMap->detailKerusakans->unique('id') as $kerusakan)
+                                            <li>{{ $kerusakan->nama_kerusakan }} = Rp.
+                                                {{ number_format($kerusakan->biaya_kerusakan, 0, ',', '.') }}</li>
+                                        @endforeach
+                                    </ul>
+
+                                </div>
+                            @endif
+                        </td>
+                    </tr>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="1" class="text-right"><strong>Total:</strong></td>
+                        <td colspan="3" class="text-right"><strong>Total Modal:</strong></td>
                         <td class="text-right">Rp.
-                            {{ number_format($transaksi->detailTransaksis->first()->harga_jual ?? 0, 0, ',', '.') }}
+                            {{ number_format($transaksi->calculateTotalModal(), 0, ',', '.') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right"><strong>Harga Jual:</strong></td>
+                        <td class="text-right">Rp.
+                            {{ number_format($transaksi->detailTransaksis->first()->total_harga_jual ?? 0, 0, ',', '.') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right"><strong>Upah Supir:</strong></td>
+                        <td class="text-right">Rp.
+                            {{ number_format($transaksi->detailTransaksis->first()->upah_supir ?? 0, 0, ',', '.') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right"><strong>Total Kerusakan:</strong></td>
+                        <td class="text-right">Rp.
+                            {{ number_format($transaksi->detailTransaksis->flatMap->detailKerusakans->sum('biaya_kerusakan'), 0, ',', '.') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right"><strong>Pendapatan:</strong></td>
+                        <td class="text-right">Rp.
+                            {{ number_format($transaksi->calculateProfitFromDetails(), 0, ',', '.') }}
                         </td>
                     </tr>
                 </tfoot>

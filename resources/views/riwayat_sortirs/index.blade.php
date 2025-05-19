@@ -20,7 +20,7 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h3>Tabel Riwayat Sortir</h3>
+                                <h3>Tabel Riwayat Sortir Sawit</h3>
                             </div>
                         </div>
                         <div class="card-body">
@@ -34,7 +34,7 @@
                                         <th>Status</th>
                                         <th>Harga</th>
                                         <th>Presentase</th>
-                                        <th>Jongkos</th>
+                                        <th>Jangkos</th>
                                         <th>Timbangan Bersih</th>
                                         <th>Harga Beli</th>
                                         <th>Penjual</th>
@@ -53,7 +53,9 @@
                                             <td>{{ $riwayatSortir->presentase->name ?? '-' }}%</td>
                                             <td>{{ $riwayatSortir->jangkos ? $riwayatSortir->jangkos : 0 }}kg</td>
                                             <td>{{ $riwayatSortir->timbangan_bersih }}kg</td>
-                                            <td>Rp. {{ number_format($riwayatSortir->harga, 0, ',', '.') }}</td>
+                                            <td>Rp.
+                                                {{ number_format($riwayatSortir->harga * $riwayatSortir->timbangan_bersih, 0, ',', '.') }}
+                                            </td>
                                             <td>{{ $riwayatSortir->penjual->name ?? '-' }}</td>
                                             <td>{{ $riwayatSortir->transaksi->kode_transaksi ?? 'N/A' }}</td>
 

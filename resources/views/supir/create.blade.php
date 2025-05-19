@@ -48,7 +48,8 @@
                                     <select name="truk_id" id="truk_id" class="form-control">
                                         <option value="">Pilih Truk</option>
                                         @foreach ($truks as $truk)
-                                            <option value="{{ $truk->id }}">{{ $truk->name }}</option>
+                                            <option value="{{ $truk->id }}">{{ $truk->name }} - {{ $truk->noPlat }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>

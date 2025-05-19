@@ -23,15 +23,6 @@
             </li>
 
             <li class="nav-item">
-                <a href="{{ route('about') }}" class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}">
-                    <i class="nav-icon far fa-address-card"></i>
-                    <p>
-                        {{ __('About us') }}
-                    </p>
-                </a>
-            </li>
-
-            <li class="nav-item">
                 <a href="{{ route('truks.index') }}"
                     class="nav-link {{ request()->routeIs('truks.index') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-truck"></i>
@@ -73,7 +64,7 @@
                     class="nav-link {{ request()->routeIs('sortirs.index') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-sort"></i>
                     <p>
-                        {{ __('Sortir') }}
+                        {{ __('Sortir Sawit') }}
                     </p>
                 </a>
             </li>
@@ -81,7 +72,7 @@
                 <a href="{{ route('riwayat_sortirs.index') }}"
                     class="nav-link {{ request()->routeIs('riwayat_sortirs.index') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-history"></i>
-                    <p>Riwayat Sortir</p>
+                    <p>Riwayat Sortir Sawit</p>
                 </a>
             </li>
             <li class="nav-item">

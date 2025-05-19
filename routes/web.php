@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SupirController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\RiwayatSortirController;
+use App\Http\Controllers\PengeluaranController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -31,7 +32,6 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware('auth')->group(function () {
-    Route::view('about', 'about')->name('about');
 
     Route::resource('users', UserController::class);
     Route::resource('truks', TrukController::class);

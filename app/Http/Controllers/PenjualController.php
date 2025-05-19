@@ -13,7 +13,7 @@ class PenjualController extends Controller
     public function index()
     {
         $penjuals = Penjual::all();
-        return view('layouts.penjual.index', compact('penjuals'));
+        return view('penjual.index', compact('penjuals'));
     }
 
     /**
@@ -21,7 +21,7 @@ class PenjualController extends Controller
      */
     public function create()
     {
-        return view('layouts.penjual.create');
+        return view('penjual.create');
     }
 
     /**
@@ -44,7 +44,7 @@ class PenjualController extends Controller
      */
     public function show(Penjual $penjual)
     {
-        return view('layouts.penjual.show', compact('penjual'));
+        return view('penjual.show', compact('penjual'));
     }
 
     /**
@@ -52,7 +52,7 @@ class PenjualController extends Controller
      */
     public function edit(Penjual $penjual)
     {
-        return view('layouts.penjual.edit', compact('penjual'));
+        return view('penjual.edit', compact('penjual'));
     }
 
     /**
